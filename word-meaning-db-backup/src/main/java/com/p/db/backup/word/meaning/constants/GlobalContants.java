@@ -1,11 +1,22 @@
 package com.p.db.backup.word.meaning.constants;
 
-public final class GlobalContants {
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-	public static final String JSON_DATA_DIRECTORY = "C:/Users/premendra.kumar/Desktop/DUMP/wm-imp-exp/wm-json/";
-	public static final String OUTPUT_DIRECTORY = "C:/Users/premendra.kumar/Desktop/DUMP/wm-imp-exp/json-data-output/";
-	public static final String ZIP_DIRECTORY = "C:/Users/premendra.kumar/Desktop/DUMP/wm-imp-exp/json-zip/";
-	public static final int MAX_PAGE_SIZE = 1500;
+@Service
+public class GlobalContants {
+
+	@Value("${wm.global.constants.jsonDataDirectory}")
+	private String JSON_DATA_DIRECTORY;
+	
+	@Value("${wm.global.constants.outputDirectory}")
+	private String OUTPUT_DIRECTORY;
+	
+	@Value("${wm.global.constants.zipDirectory}")
+	private String ZIP_DIRECTORY;
+	
+	@Value("${wm.global.constants.maxPageSize}")
+	private int MAX_PAGE_SIZE;
 
 	public static final int MIN_BATCH_INSERT_SIZE = 50;
 	public static final int MAX_BATCH_INSERT_SIZE = 1200;
@@ -14,6 +25,21 @@ public final class GlobalContants {
 	public static final String wordMeaningJsonFilesPrefix = "word-meaning";
 	public static final String wordMeaningOutputZipFilePrefix = "word-meaning-data_";
 	public static final String jsonExtension = ".json";
-	public static final boolean insertIntoTargetDBEnabled = true;
+	public static final boolean insertIntoTargetDBEnabled = false;
+	
+	
+	
+	public String getJSON_DATA_DIRECTORY() {
+		return JSON_DATA_DIRECTORY;
+	}
+	public String getOUTPUT_DIRECTORY() {
+		return OUTPUT_DIRECTORY;
+	}
+	public String getZIP_DIRECTORY() {
+		return ZIP_DIRECTORY;
+	}
+	public int getMAX_PAGE_SIZE() {
+		return MAX_PAGE_SIZE;
+	}
 
 }

@@ -37,6 +37,9 @@ public class ReadService {
 
 	@Autowired
 	UtilityService utilityService;
+	
+	@Autowired
+	GlobalContants globalContants;
 
 	private boolean deleteDirectory(File dir) {
 		if (dir.isDirectory()) {
@@ -73,8 +76,8 @@ public class ReadService {
 		// ObjectMapper objectMapper = new
 		// ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
 
-		String jsonDataDirectory = GlobalContants.JSON_DATA_DIRECTORY;
-		String outputDirectory = GlobalContants.OUTPUT_DIRECTORY;
+		String jsonDataDirectory = globalContants.getJSON_DATA_DIRECTORY();
+		String outputDirectory = globalContants.getOUTPUT_DIRECTORY();
 
 		///
 		String pattern = "yyyy-MM-dd_HH_mm_ss";
@@ -135,7 +138,7 @@ public class ReadService {
 //		obj.put("status", "Success");
 //		obj.put("message", "All data fetched from DB Successfully!!");
 
-		return generatedFileName;
+		return outputDirectory+generatedFileName;
 
 	}
 	

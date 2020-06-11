@@ -48,6 +48,9 @@ public class ImportController {
 
 	@Autowired
 	WordRepository wordRepository;
+	
+	@Autowired
+	GlobalContants globalContants;
 
 	@GetMapping("/import")
 	public ResponseEntity<Object> importData(@RequestParam("zipfilepath") String zipFilePath,
@@ -81,7 +84,7 @@ public class ImportController {
 			// sb.append("\n1. Unzip, ");
 			// ----- //
 
-			File[] targetFiles = writeService.unzip(zipFilePath, GlobalContants.ZIP_DIRECTORY);
+			File[] targetFiles = writeService.unzip(zipFilePath, globalContants.getZIP_DIRECTORY());
 			log.debug("Zip file extracted successfully!!");
 
 			//////////////////////////////////////////////////////////////
