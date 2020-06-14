@@ -33,7 +33,7 @@ public class CurdService {
 			throw new InvalidInputSuppliedException("Null unique name supplied. ");
 		}
 
-		boolean uniqueNameExists = jdbcTemplateRepository.checkUniqueNameExists(word.getUnique_name());
+		boolean uniqueNameExists = jdbcTemplateRepository.checkUniqueNameExists(word.getUnique_name(),0);
 
 		if (uniqueNameExists) {
 			throw new InvalidInputSuppliedException("Unique name : " + word.getUnique_name()
@@ -76,12 +76,12 @@ public class CurdService {
 			throw new InvalidInputSuppliedException("Invalid word id : " + word.getId() + " : supplied. ");
 		}
 
-//		boolean uniqueNameExists = jdbcTemplateRepository.checkUniqueNameExists(word.getUnique_name());
-//
-//		if (uniqueNameExists) {
-//			throw new InvalidInputSuppliedException("Unique name : " + word.getUnique_name()
-//					+ " : is already exists in database. Please check and provide some other unique name ");
-//		}
+		boolean uniqueNameExists = jdbcTemplateRepository.checkUniqueNameExists(word.getUnique_name(),word.getId());
+
+		if (uniqueNameExists) {
+			throw new InvalidInputSuppliedException("Unique name : " + word.getUnique_name()
+					+ " : is already exists in database. Please check and provide some other unique name ");
+		}
 
 		/**
 		 * Validation end
