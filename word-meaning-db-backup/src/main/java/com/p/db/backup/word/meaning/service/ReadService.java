@@ -71,7 +71,7 @@ public class ReadService {
 
 		System.out.println("pageSize : " + pageSize + " pages : " + pages);
 
-		List<Word> authors = wordService.findPagedData(pageNo, pageSize);
+		List<Word> authors = wordService.findPagedData(pageNo, pageSize,0);
 		System.out.println(authors != null ? authors.size() : "null");
 		// ObjectMapper objectMapper = new
 		// ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
@@ -114,7 +114,7 @@ public class ReadService {
 			// e.printStackTrace();
 			// }
 
-			authors = wordService.findPagedData(++pageNo, pageSize);
+			authors = wordService.findPagedData(++pageNo, pageSize,0);
 			System.out.println(authors != null ? authors.size() : "null");
 
 		}

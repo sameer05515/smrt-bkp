@@ -15,8 +15,11 @@ import com.p.db.backup.word.meaning.pojo.Word;
 
 public interface WordRepository extends JpaRepository<Word, Integer> {
 
-	@Query("FROM Word")
-	List<Word> findPagedData(Pageable pageable);
+	// @Query("FROM Word")
+	@Query(value = "SELECT * from t_word w where DATE(w.updated_on)<= (SELECT DATE_SUB(CURRENT_DATE,INTERVAL :daysBack day)) ", nativeQuery = true)
+	List<Word> findPagedData(Pageable pageable, @Param("daysBack") int daysBack);
+
+//	List<Word> findPagedData(Pageable pageable);
 
 	@Modifying
 	@Transactional
@@ -31,7 +34,5 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 	 */
 	@Query(value = "SELECT * from t_word w where w.word like %:name% ", nativeQuery = true)
 	List<Word> findByNameNative(@Param("name") String name);
-	
-	
 
 }

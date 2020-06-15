@@ -21,7 +21,7 @@ public class WordService {
 	@Autowired
 	GlobalContants globalContants;
 	
-	public List<Word> findPagedData(int pageNumber,int pageSize) throws InvalidInputSuppliedException{
+	public List<Word> findPagedData(int pageNumber,int pageSize,int daysBack) throws InvalidInputSuppliedException{
 		
 		if(pageNumber<0) {
 			throw new InvalidInputSuppliedException("Invalid page number ( "+pageNumber +" ) supplied. ");
@@ -31,8 +31,12 @@ public class WordService {
 			throw new InvalidInputSuppliedException("Invalid page size ( "+pageSize +" ) supplied. Value should be between 0 and "+globalContants.getMAX_PAGE_SIZE());
 		}
 		
+		if(daysBack<0) {
+			daysBack=0;
+		}
+		
 		Pageable pageable = PageRequest.of(pageNumber, pageSize);
-		List<Word> pagedData = wordRepository.findPagedData(pageable);
+		List<Word> pagedData = wordRepository.findPagedData(pageable,daysBack);
 		
 		return pagedData;
 	}
