@@ -38,7 +38,7 @@ public class JDBCTemplateRepository {
 				lw, 1, new ParameterizedPreparedStatementSetter<Word>() {
 					public void setValues(PreparedStatement ps, Word argument) throws SQLException {
 						int i = 0;
-						
+
 						ps.setInt(i++, argument.getId());
 						ps.setString(i++, argument.getUnique_name());
 						ps.setString(i++, argument.getWord());
@@ -89,6 +89,17 @@ public class JDBCTemplateRepository {
 			result = true;
 		}
 		return result;
+	}
+
+	public int getIdForUniqueName(String uniqueName, int id) {
+
+		String sql = "SELECT ID FROM T_WORD WHERE UPPER(UNIQUE_NAME) = ?";
+		boolean result = false;
+		int idFromDB = jdbcTemplate.queryForObject(sql, new Object[] { uniqueName.toUpperCase() }, Integer.class);
+//		if (idFromDB > 0) {
+//			result = idFromDB!=id;
+//		}
+		return idFromDB;
 	}
 
 }

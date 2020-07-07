@@ -76,9 +76,10 @@ public class CurdService {
 			throw new InvalidInputSuppliedException("Invalid word id : " + word.getId() + " : supplied. ");
 		}
 
-		boolean uniqueNameExists = jdbcTemplateRepository.checkUniqueNameExists(word.getUnique_name(),word.getId());
+		//boolean uniqueNameExists = jdbcTemplateRepository.checkUniqueNameExists(word.getUnique_name(),word.getId());
+		int idFromDB=jdbcTemplateRepository.getIdForUniqueName(word.getUnique_name(), word.getId());
 
-		if (uniqueNameExists) {
+		if (idFromDB!=word.getId()) {
 			throw new InvalidInputSuppliedException("Unique name : " + word.getUnique_name()
 					+ " : is already exists in database. Please check and provide some other unique name ");
 		}
