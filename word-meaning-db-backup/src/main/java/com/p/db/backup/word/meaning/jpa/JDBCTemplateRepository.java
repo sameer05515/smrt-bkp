@@ -3,6 +3,8 @@ package com.p.db.backup.word.meaning.jpa;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.Format;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -112,15 +114,16 @@ public class JDBCTemplateRepository {
 		List<Map<String, Object>> reportData = new ArrayList<>();
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+		
+		Format f = new SimpleDateFormat("dd-MMM-yyyy");
 
 		for (Map<String, Object> row : rows) {
 			Map<String, Object> map = new HashMap<String, Object>();
 
-			// map.put(((Timestamp) row.get("Last_updated_on")), ((Integer)
-			// row.get("cnt")).intValue());
-//			new Timestamp(((java.sql.Date)row.get("Last_updated_on")).getTime())
 			map.put("lastUpdatedOn",
-					new Timestamp(((java.sql.Date)row.get("lastUpdatedOn")).getTime()));
+					f.format(((java.sql.Date)row.get("lastUpdatedOn"))));
+//			map.put("lastUpdatedOn",
+//					new Timestamp(((java.sql.Date)row.get("lastUpdatedOn")).getTime()));
 			map.put("count",
 					((Long) row.get("count")).intValue());
 			reportData.add(map);
