@@ -1,6 +1,7 @@
 package com.p.db.backup.word.meaning.controller;
 
 import java.util.List;
+import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.p.db.backup.word.meaning.constants.GlobalContants;
+//import com.p.db.backup.word.meaning.constants.GlobalContants;
 import com.p.db.backup.word.meaning.exception.InvalidInputSuppliedException;
+import com.p.db.backup.word.meaning.jpa.JDBCTemplateRepository;
 import com.p.db.backup.word.meaning.pojo.Word;
 import com.p.db.backup.word.meaning.response.ResponseHandler;
 import com.p.db.backup.word.meaning.service.CurdService;
@@ -35,6 +37,9 @@ public class ReportController {
 
 	@Autowired
 	WordService wordService;
+	
+	@Autowired
+	JDBCTemplateRepository jdbcTemplateRepository;
 
 	@GetMapping("/words")
 	public ResponseEntity<Object> findByName(@RequestParam("name") String name) {
@@ -124,6 +129,31 @@ public class ReportController {
 			System.out.println("Word : " + word);
 
 			Word retWord = curdService.updateWord(word);
+
+			response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success", retWord);
+
+		} catch (Exception e) {
+			if (e instanceof InvalidInputSuppliedException) {
+				response = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, true,
+						((InvalidInputSuppliedException) e).getCustomMessage(), "File Created : null");
+			} else {
+				response = ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, true, e.getMessage(),
+						"File Created : null");
+			}
+			e.printStackTrace();
+		}
+		return response;
+	}
+	
+	@GetMapping("/reports/datewise/LastUpdated")
+	public ResponseEntity<Object> reportByDatewiseOnLastupdate() {
+		ResponseEntity<Object> response = null;
+		try {
+			log.info("Inside com.p.db.backup.word.meaning.controller.ReportController.reportByDatewiseOnLastupdate() method ...");
+
+			
+
+			List<Map<String, Object>> retWord = jdbcTemplateRepository.getDatewiseUpdateData();
 
 			response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success", retWord);
 

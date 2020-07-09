@@ -4,9 +4,13 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.jackson.JsonObjectDeserializer;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.ParameterizedPreparedStatementSetter;
 import org.springframework.jdbc.core.ResultSetExtractor;
@@ -80,11 +84,11 @@ public class JDBCTemplateRepository {
 
 	}
 
-	public boolean checkUniqueNameExists(String uniqueName,int id) {
-		
+	public boolean checkUniqueNameExists(String uniqueName, int id) {
+
 		String sql = "SELECT COUNT(*) FROM T_WORD WHERE UPPER(UNIQUE_NAME) = ? and ID=?";
 		boolean result = false;
-		int count = jdbcTemplate.queryForObject(sql, new Object[] { uniqueName.toUpperCase(),id }, Integer.class);
+		int count = jdbcTemplate.queryForObject(sql, new Object[] { uniqueName.toUpperCase(), id }, Integer.class);
 		if (count > 0) {
 			result = true;
 		}
@@ -100,6 +104,29 @@ public class JDBCTemplateRepository {
 //			result = idFromDB!=id;
 //		}
 		return idFromDB;
+	}
+
+	public List<Map<String, Object>> getDatewiseUpdateData() {
+		String sql = "SELECT Date(updated_on) as lastUpdatedOn,count(*) as count "
+				+ "FROM t_word group by lastUpdatedOn order by  lastUpdatedOn desc";
+		List<Map<String, Object>> reportData = new ArrayList<>();
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+
+		for (Map<String, Object> row : rows) {
+			Map<String, Object> map = new HashMap<String, Object>();
+
+			// map.put(((Timestamp) row.get("Last_updated_on")), ((Integer)
+			// row.get("cnt")).intValue());
+//			new Timestamp(((java.sql.Date)row.get("Last_updated_on")).getTime())
+			map.put("lastUpdatedOn",
+					new Timestamp(((java.sql.Date)row.get("lastUpdatedOn")).getTime()));
+			map.put("count",
+					((Long) row.get("count")).intValue());
+			reportData.add(map);
+		}
+
+		return reportData;
 	}
 
 }

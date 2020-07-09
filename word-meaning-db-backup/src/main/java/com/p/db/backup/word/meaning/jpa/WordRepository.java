@@ -28,6 +28,9 @@ public interface WordRepository extends JpaRepository<Word, Integer> {
 	void insertWord(@Param("id") int id, @Param("unique_name") String unique_name, @Param("word") String word,
 			@Param("type") String type, @Param("details") String details, @Param("created_on") Date created_on,
 			@Param("updated_on") Date updated_on, @Param("last_read") Date last_read);
+	
+//	@Query(value="SELECT Date(updated_on) as Last_updated_on,count(*) as cnt FROM t_word group by Last_updated_on order by  Last_updated_on desc",nativeQuery=true)
+//	List<>
 
 	/**
 	 * @ using @query with native
