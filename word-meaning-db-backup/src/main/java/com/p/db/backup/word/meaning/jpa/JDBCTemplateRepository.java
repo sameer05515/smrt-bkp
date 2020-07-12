@@ -109,23 +109,25 @@ public class JDBCTemplateRepository {
 	}
 
 	public List<Map<String, Object>> getDatewiseUpdateData() {
-		String sql = "SELECT Date(updated_on) as lastUpdatedOn,count(*) as count "
-				+ "FROM t_word group by lastUpdatedOn order by  lastUpdatedOn desc";
+//		String sql = "SELECT Date(updated_on) as lastUpdatedOn,count(*) as count "
+//				+ "FROM t_word group by lastUpdatedOn order by  lastUpdatedOn desc";
+
+		String sql = "SELECT Date(changedate) as lastUpdatedOn, count(distinct(word_id)) as count \r\n"
+				+ "FROM word_update_log \r\n" + "Where action='update'\r\n" + "group by lastUpdatedOn\r\n"
+				+ "order by  lastUpdatedOn desc\r\n" + "";
 		List<Map<String, Object>> reportData = new ArrayList<>();
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
-		
+
 		Format f = new SimpleDateFormat("dd-MMM-yyyy");
 
 		for (Map<String, Object> row : rows) {
 			Map<String, Object> map = new HashMap<String, Object>();
 
-			map.put("lastUpdatedOn",
-					f.format(((java.sql.Date)row.get("lastUpdatedOn"))));
+			map.put("lastUpdatedOn", f.format(((java.sql.Date) row.get("lastUpdatedOn"))));
 //			map.put("lastUpdatedOn",
 //					new Timestamp(((java.sql.Date)row.get("lastUpdatedOn")).getTime()));
-			map.put("count",
-					((Long) row.get("count")).intValue());
+			map.put("count", ((Long) row.get("count")).intValue());
 			reportData.add(map);
 		}
 
