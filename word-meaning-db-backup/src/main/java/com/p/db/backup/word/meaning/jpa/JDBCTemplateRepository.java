@@ -115,6 +115,9 @@ public class JDBCTemplateRepository {
 		String sql = "SELECT Date(changedate) as lastUpdatedOn, count(distinct(word_id)) as count \r\n"
 				+ "FROM word_update_log \r\n" + "Where action='update'\r\n" + "group by lastUpdatedOn\r\n"
 				+ "order by  lastUpdatedOn desc\r\n" + "";
+		
+		System.out.println(sql);
+		
 		List<Map<String, Object>> reportData = new ArrayList<>();
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
@@ -132,6 +135,14 @@ public class JDBCTemplateRepository {
 		}
 
 		return reportData;
+	}
+	
+	public static void main(String[] args) {
+		String sql = "SELECT Date(changedate) as lastUpdatedOn, count(distinct(word_id)) as count \r\n"
+				+ "FROM word_update_log \r\n" + "Where action='update'\r\n" + "group by lastUpdatedOn\r\n"
+				+ "order by  lastUpdatedOn desc\r\n" + "";
+		
+		System.out.println(sql);
 	}
 
 }
