@@ -1,14 +1,11 @@
 package com.p.db.backup.word.meaning.pojo;
 
-import java.io.IOException;
 import java.util.Date;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Table;
-
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 @Entity
 @Table(name = "t_word")
