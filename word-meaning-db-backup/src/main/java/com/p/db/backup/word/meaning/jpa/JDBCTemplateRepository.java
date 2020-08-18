@@ -46,8 +46,8 @@ public class JDBCTemplateRepository {
 						int i = 1;
 
 						ps.setInt(i++, argument.getId());
-						ps.setString(i++, argument.getUnique_name());
-						ps.setString(i++, argument.getWord());
+						ps.setString(i++, argument.getUnique_name().trim().toUpperCase());
+						ps.setString(i++, argument.getWord().trim().toUpperCase());
 						ps.setString(i++, argument.getType());
 						ps.setString(i++, argument.getDetails());
 						ps.setTimestamp(i++, new Timestamp(argument.getCreated_on().getTime()));
@@ -71,8 +71,8 @@ public class JDBCTemplateRepository {
 					public void setValues(PreparedStatement ps, Word argument) throws SQLException {
 						int i = 1;
 
-						ps.setString(i++, argument.getUnique_name());
-						ps.setString(i++, argument.getWord());
+						ps.setString(i++, argument.getUnique_name().trim().toUpperCase());
+						ps.setString(i++, argument.getWord().trim().toUpperCase());
 						ps.setString(i++, argument.getType());
 						ps.setString(i++, argument.getDetails());
 						ps.setTimestamp(i++, new Timestamp(argument.getUpdated_on().getTime()));
