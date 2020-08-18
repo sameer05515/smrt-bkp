@@ -155,8 +155,10 @@ public class ReportController {
 					"Inside com.p.db.backup.word.meaning.controller.ReportController.reportByDatewiseOnLastupdate() method ...");
 
 			List<String> validColumns = Arrays.asList("LASTUPDATED", "CREATEDON");
-			if (columnName != null && !columnName.trim().equalsIgnoreCase("") && validColumns.contains(columnName)) {
-				List<Map<String, Object>> retWord = jdbcTemplateRepository.getDatewiseUpdateData(columnName.toUpperCase());
+			if (columnName != null && !columnName.trim().equalsIgnoreCase("")
+					&& validColumns.contains(columnName.toUpperCase())) {
+				List<Map<String, Object>> retWord = jdbcTemplateRepository
+						.getDatewiseUpdateData(columnName.toUpperCase());
 
 				response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success", retWord);
 			} else {
