@@ -152,9 +152,12 @@ public class JDBCTemplateRepository {
 
 	private List<Map<String, Object>> getCreatedOnReport() {
 
-		String sql = "SELECT Date(created_on) as Action_date, " + "count(distinct(id)) as count , "
-				+ "'created' as Action\r\n" + "FROM t_word \r\n" + "group by created_on\r\n"
-				+ "order by  created_on desc";
+		String sql = "SELECT Date(created_on) as Action_date, "
+				+ "count(distinct(id)) as count , "
+				+ "'created' as Action\r\n" + 
+				"FROM t_word \r\n" + 
+				"group by Action_date\r\n" + 
+				"order by  created_on desc";
 
 		System.out.println(sql);
 
@@ -175,9 +178,9 @@ public class JDBCTemplateRepository {
 	}
 
 	public static void main(String[] args) {
-		String sql = "SELECT Date(changedate) as Action_date," + " count(distinct(word_id)) as count ,"
-				+ "'updated' as Action\r\n" + "FROM word_update_log \r\n" + "Where action='update'\r\n"
-				+ "group by Action_date\r\n" + "order by  Action_date desc";
+		String sql = "SELECT Date(created_on) as Action_date, " + "count(distinct(id)) as count , "
+				+ "'created' as Action\r\n" + "FROM t_word \r\n" + "group by created_on\r\n"
+				+ "order by  created_on desc";
 
 		System.out.println(sql);
 	}
