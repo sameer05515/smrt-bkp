@@ -142,9 +142,9 @@ public class JDBCTemplateRepository {
 
 		for (Map<String, Object> row : rows) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("01ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
-			map.put("02Count", ((Long) row.get("count")).intValue());
-			map.put("03Action", (row.get("count")));
+			map.put("ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
+			map.put("Count", ((Long) row.get("count")).intValue());
+			map.put("Action", (row.get("count")));
 			reportData.add(map);
 		}
 		return reportData;
@@ -166,9 +166,9 @@ public class JDBCTemplateRepository {
 
 		for (Map<String, Object> row : rows) {
 			Map<String, Object> map = new HashMap<String, Object>();
-			map.put("01ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
-			map.put("02Count", ((Long) row.get("count")).intValue());
-			map.put("03Action", (row.get("count")));
+			map.put("ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
+			map.put("Count", ((Long) row.get("count")).intValue());
+			map.put("Action", (row.get("count")));
 			reportData.add(map);
 		}
 		return reportData;
