@@ -43,7 +43,7 @@ public class JDBCTemplateRepository {
 						+ " values(?,?,?,?,?,?,?,?)",
 				lw, 1, new ParameterizedPreparedStatementSetter<Word>() {
 					public void setValues(PreparedStatement ps, Word argument) throws SQLException {
-						int i = 0;
+						int i = 1;
 
 						ps.setInt(i++, argument.getId());
 						ps.setString(i++, argument.getUnique_name());
