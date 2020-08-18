@@ -108,16 +108,52 @@ public class JDBCTemplateRepository {
 		return idFromDB;
 	}
 
-	public List<Map<String, Object>> getDatewiseUpdateData() {
-//		String sql = "SELECT Date(updated_on) as lastUpdatedOn,count(*) as count "
-//				+ "FROM t_word group by lastUpdatedOn order by  lastUpdatedOn desc";
+	public List<Map<String, Object>> getDatewiseUpdateData(String columnName) {
 
-		String sql = "SELECT Date(changedate) as lastUpdatedOn, count(distinct(word_id)) as count \r\n"
-				+ "FROM word_update_log \r\n" + "Where action='update'\r\n" + "group by lastUpdatedOn\r\n"
-				+ "order by  lastUpdatedOn desc\r\n" + "";
-		
+//"LASTUPDATED", "CREATEDON"
+		List<Map<String, Object>> reportData = new ArrayList<>();
+
+		switch (columnName) {
+		case "LASTUPDATED":
+			reportData = getLastUpdatedReport();
+			break;
+		case "":
+			reportData = getCreatedOnReport();
+			break;
+		default:
+			System.out.println("Invalid column name");
+		}
+		String sql = "SELECT Date(changedate) as Action_date," + " count(distinct(word_id)) as count ,"
+				+ "'updated' as Action\r\n" + "FROM word_update_log \r\n" + "Where action='update'\r\n"
+				+ "group by Action_date\r\n" + "order by  Action_date desc";
+
 		System.out.println(sql);
-		
+
+		reportData = new ArrayList<>();
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+
+		Format f = new SimpleDateFormat("dd-MMM-yyyy");
+
+		for (Map<String, Object> row : rows) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
+			map.put("Count", ((Long) row.get("count")).intValue());
+			map.put("Action", (row.get("count")));
+			reportData.add(map);
+		}
+
+		return reportData;
+	}
+
+	private List<Map<String, Object>> getLastUpdatedReport() {
+
+		String sql = "SELECT Date(changedate) as Action_date," + " count(distinct(word_id)) as count ,"
+				+ "'updated' as Action\r\n" + "FROM word_update_log \r\n" + "Where action='update'\r\n"
+				+ "group by Action_date\r\n" + "order by  Action_date desc";
+
+		System.out.println(sql);
+
 		List<Map<String, Object>> reportData = new ArrayList<>();
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
@@ -126,22 +162,43 @@ public class JDBCTemplateRepository {
 
 		for (Map<String, Object> row : rows) {
 			Map<String, Object> map = new HashMap<String, Object>();
-
-			map.put("lastUpdatedOn", f.format(((java.sql.Date) row.get("lastUpdatedOn"))));
-//			map.put("lastUpdatedOn",
-//					new Timestamp(((java.sql.Date)row.get("lastUpdatedOn")).getTime()));
-			map.put("count", ((Long) row.get("count")).intValue());
+			map.put("ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
+			map.put("Count", ((Long) row.get("count")).intValue());
+			map.put("Action", (row.get("count")));
 			reportData.add(map);
 		}
-
 		return reportData;
 	}
-	
+
+	private List<Map<String, Object>> getCreatedOnReport() {
+
+		String sql = "SELECT Date(created_on) as Action_date, " + "count(distinct(id)) as count , "
+				+ "'created' as Action\r\n" + "FROM t_word \r\n" + "group by created_on\r\n"
+				+ "order by  created_on desc";
+
+		System.out.println(sql);
+
+		List<Map<String, Object>> reportData = new ArrayList<>();
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+
+		Format f = new SimpleDateFormat("dd-MMM-yyyy");
+
+		for (Map<String, Object> row : rows) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
+			map.put("Count", ((Long) row.get("count")).intValue());
+			map.put("Action", (row.get("count")));
+			reportData.add(map);
+		}
+		return reportData;
+	}
+
 	public static void main(String[] args) {
 		String sql = "SELECT Date(changedate) as lastUpdatedOn, count(distinct(word_id)) as count \r\n"
 				+ "FROM word_update_log \r\n" + "Where action='update'\r\n" + "group by lastUpdatedOn\r\n"
 				+ "order by  lastUpdatedOn desc\r\n" + "";
-		
+
 		System.out.println(sql);
 	}
 

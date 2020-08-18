@@ -1,5 +1,6 @@
 package com.p.db.backup.word.meaning.controller;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -37,7 +38,7 @@ public class ReportController {
 
 	@Autowired
 	WordService wordService;
-	
+
 	@Autowired
 	JDBCTemplateRepository jdbcTemplateRepository;
 
@@ -144,23 +145,28 @@ public class ReportController {
 		}
 		return response;
 	}
-	
+
 	@GetMapping("/reports/datewise/LastUpdated")
-	public ResponseEntity<Object> reportByDatewiseOnLastupdate() {
+	public ResponseEntity<Object> reportByDatewiseOnLastupdate(
+			@RequestParam(value = "columnName", required = false, defaultValue = "LastUpdated") String columnName) {
 		ResponseEntity<Object> response = null;
 		try {
-			log.info("Inside com.p.db.backup.word.meaning.controller.ReportController.reportByDatewiseOnLastupdate() method ...");
+			log.info(
+					"Inside com.p.db.backup.word.meaning.controller.ReportController.reportByDatewiseOnLastupdate() method ...");
 
-			
+			List<String> validColumns = Arrays.asList("LASTUPDATED", "CREATEDON");
+			if (columnName != null && !columnName.trim().equalsIgnoreCase("") && validColumns.contains(columnName)) {
+				List<Map<String, Object>> retWord = jdbcTemplateRepository.getDatewiseUpdateData(columnName.toUpperCase());
 
-			List<Map<String, Object>> retWord = jdbcTemplateRepository.getDatewiseUpdateData();
-
-			response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success", retWord);
+				response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success", retWord);
+			} else {
+				throw new InvalidInputSuppliedException("Invalid columnName = " + "\"" + columnName + " \"");
+			}
 
 		} catch (Exception e) {
 			if (e instanceof InvalidInputSuppliedException) {
 				response = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, true,
-						((InvalidInputSuppliedException) e).getCustomMessage(), "File Created : null");
+						((InvalidInputSuppliedException) e).getCustomMessage(), "{}");
 			} else {
 				response = ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, true, e.getMessage(),
 						"File Created : null");
