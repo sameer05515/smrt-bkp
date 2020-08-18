@@ -144,7 +144,7 @@ public class JDBCTemplateRepository {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
 			map.put("Count", ((Long) row.get("count")).intValue());
-			map.put("Action", (row.get("count")));
+			map.put("Action", (row.get("Action")));
 			reportData.add(map);
 		}
 		return reportData;
@@ -171,7 +171,7 @@ public class JDBCTemplateRepository {
 			Map<String, Object> map = new HashMap<String, Object>();
 			map.put("ActionDate", f.format(((java.sql.Date) row.get("Action_date"))));
 			map.put("Count", ((Long) row.get("count")).intValue());
-			map.put("Action", (row.get("count")));
+			map.put("Action", (row.get("Action")));
 			reportData.add(map);
 		}
 		return reportData;
