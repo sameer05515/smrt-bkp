@@ -205,33 +205,43 @@ public class JDBCTemplateRepository {
 		System.out.println(sql);
 	}
 
-	public boolean addRead(int id) {
-		
+	public boolean addRead(Word word) {
+
 		String[] sqlArray = {
-				"INSERT INTO word_update_log SET action = 'read', word_id = " + id + ", changedate = NOW()",
-				"update t_word set last_read= NOW() where id=" + id + "" };
-		
+				"INSERT INTO word_update_log SET action = 'read', word_id = " + word.getId() + ", unique_name = '"
+						+ word.getUnique_name() + "' , changedate = NOW()",
+				"update t_word set last_read= NOW() where id=" + word.getId() + "" };
+		for(String sql:sqlArray) {
+			System.out.println(sql);
+		}
+
 		int[] resp = jdbcTemplate.batchUpdate(sqlArray);
 
 		return true;
 	}
-	
-	public Map<String,Object> getReads(int id){
-		
-		String sql = "SELECT Date(created_on) as Action_date, " + "count(distinct(id)) as count , "
-				+ "'created' as Action\r\n" + "FROM t_word \r\n" + "group by Action_date\r\n"
-				+ "order by  created_on desc";
+
+	public List<Map<String,Object>> getReads(int id) {
+
+		String sql = "SELECT * FROM word_update_log wul " + "where wul.word_id='" + id + "' " + "and wul.action='read'";
 
 		System.out.println(sql);
 
-		Map<String, Object> reportData = new HashMap<>();
+		List<Map<String, Object>> reportData = new ArrayList<>();
 
 		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
 		
-		
+		for (Map<String, Object> row : rows) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("readDate", (java.sql.Timestamp)row.get("changedate"));
+			map.put("action", row.get("action"));
+			map.put("wordId", row.get("word_id"));
+			map.put("id", ((Integer) row.get("id")));
+			map.put("uniqueName", (row.get("unique_name")));
+			reportData.add(map);
+		}
+
 		return reportData;
-		
-		
+
 	}
 
 }

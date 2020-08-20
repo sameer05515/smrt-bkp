@@ -1,6 +1,7 @@
 package com.p.db.backup.word.meaning.controller;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -20,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 //import com.p.db.backup.word.meaning.constants.GlobalContants;
 import com.p.db.backup.word.meaning.exception.InvalidInputSuppliedException;
 import com.p.db.backup.word.meaning.jpa.JDBCTemplateRepository;
+import com.p.db.backup.word.meaning.jpa.WordRepository;
 import com.p.db.backup.word.meaning.pojo.Word;
 import com.p.db.backup.word.meaning.response.ResponseHandler;
 import com.p.db.backup.word.meaning.service.CurdService;
@@ -39,6 +41,9 @@ public class ReportController {
 
 	@Autowired
 	WordService wordService;
+
+	@Autowired
+	WordRepository wordRepository;
 
 	@Autowired
 	JDBCTemplateRepository jdbcTemplateRepository;
@@ -189,7 +194,10 @@ public class ReportController {
 			// List<String> validColumns = Arrays.asList("LASTUPDATED", "CREATEDON",
 			// "READON");
 			if (id > 0) {
-				boolean retWord = jdbcTemplateRepository.addRead(id);
+
+				Word word = wordRepository.findById(id).get();
+
+				boolean retWord = jdbcTemplateRepository.addRead(word);
 
 				response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success fully marked read",
 						"Success fully marked read : status : " + retWord);
@@ -214,16 +222,25 @@ public class ReportController {
 	public ResponseEntity<Object> getReads(@PathVariable("id") int id) {
 		ResponseEntity<Object> response = null;
 		try {
-			log.info(
-					"Inside com.p.db.backup.word.meaning.controller.ReportController.getReads() method ...");
+			log.info("Inside com.p.db.backup.word.meaning.controller.ReportController.getReads() method ...");
 
 			// List<String> validColumns = Arrays.asList("LASTUPDATED", "CREATEDON",
 			// "READON");
 			if (id > 0) {
-				Map<String, Object> readsDetails = jdbcTemplateRepository.getReads(id);
 
-				response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success fully marked read",
-						"Success fully marked read : status : " + readsDetails);
+				Word word = wordRepository.findById(id).get();
+
+				List<Map<String, Object>> readsDetails = jdbcTemplateRepository.getReads(id);
+
+				Map<String, Object> finalObj = new HashMap<String, Object>();
+				finalObj.put("word", word);
+				finalObj.put("count",
+						(readsDetails != null && !(readsDetails.size()<0) ? readsDetails.size() : 0));
+				finalObj.put("wordId", id);
+				finalObj.put("reads", readsDetails);
+
+				response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success fully fetched read details",
+						finalObj);
 			} else {
 				throw new InvalidInputSuppliedException("Invalid id provided = " + "'" + id + "'");
 			}
