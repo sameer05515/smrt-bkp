@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -178,4 +179,65 @@ public class ReportController {
 		return response;
 	}
 
+	@PutMapping("/words/{id}/markread")
+	public ResponseEntity<Object> addRead(@PathVariable("id") int id) {
+		ResponseEntity<Object> response = null;
+		try {
+			log.info(
+					"Inside com.p.db.backup.word.meaning.controller.ReportController.reportByDatewiseOnLastupdate() method ...");
+
+			// List<String> validColumns = Arrays.asList("LASTUPDATED", "CREATEDON",
+			// "READON");
+			if (id > 0) {
+				boolean retWord = jdbcTemplateRepository.addRead(id);
+
+				response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success fully marked read",
+						"Success fully marked read : status : " + retWord);
+			} else {
+				throw new InvalidInputSuppliedException("Invalid id provided = " + "\"" + id + " \"");
+			}
+
+		} catch (Exception e) {
+			if (e instanceof InvalidInputSuppliedException) {
+				response = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, true,
+						((InvalidInputSuppliedException) e).getCustomMessage(), "{}");
+			} else {
+				response = ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, true, e.getMessage(),
+						"{}");
+			}
+			e.printStackTrace();
+		}
+		return response;
+	}
+
+	@GetMapping("/words/{id}/reads")
+	public ResponseEntity<Object> getReads(@PathVariable("id") int id) {
+		ResponseEntity<Object> response = null;
+		try {
+			log.info(
+					"Inside com.p.db.backup.word.meaning.controller.ReportController.getReads() method ...");
+
+			// List<String> validColumns = Arrays.asList("LASTUPDATED", "CREATEDON",
+			// "READON");
+			if (id > 0) {
+				Map<String, Object> readsDetails = jdbcTemplateRepository.getReads(id);
+
+				response = ResponseHandler.generateResponse(HttpStatus.OK, false, "Success fully marked read",
+						"Success fully marked read : status : " + readsDetails);
+			} else {
+				throw new InvalidInputSuppliedException("Invalid id provided = " + "'" + id + "'");
+			}
+
+		} catch (Exception e) {
+			if (e instanceof InvalidInputSuppliedException) {
+				response = ResponseHandler.generateResponse(HttpStatus.BAD_REQUEST, true,
+						((InvalidInputSuppliedException) e).getCustomMessage(), "{}");
+			} else {
+				response = ResponseHandler.generateResponse(HttpStatus.INTERNAL_SERVER_ERROR, true, e.getMessage(),
+						"{}");
+			}
+			e.printStackTrace();
+		}
+		return response;
+	}
 }

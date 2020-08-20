@@ -205,4 +205,33 @@ public class JDBCTemplateRepository {
 		System.out.println(sql);
 	}
 
+	public boolean addRead(int id) {
+		
+		String[] sqlArray = {
+				"INSERT INTO word_update_log SET action = 'read', word_id = " + id + ", changedate = NOW()",
+				"update t_word set last_read= NOW() where id=" + id + "" };
+		
+		int[] resp = jdbcTemplate.batchUpdate(sqlArray);
+
+		return true;
+	}
+	
+	public Map<String,Object> getReads(int id){
+		
+		String sql = "SELECT Date(created_on) as Action_date, " + "count(distinct(id)) as count , "
+				+ "'created' as Action\r\n" + "FROM t_word \r\n" + "group by Action_date\r\n"
+				+ "order by  created_on desc";
+
+		System.out.println(sql);
+
+		Map<String, Object> reportData = new HashMap<>();
+
+		List<Map<String, Object>> rows = jdbcTemplate.queryForList(sql);
+		
+		
+		return reportData;
+		
+		
+	}
+
 }
