@@ -16,7 +16,8 @@ import com.p.db.backup.word.meaning.pojo.Word;
 public interface WordRepository extends JpaRepository<Word, Integer> {
 
 	// @Query("FROM Word")
-	@Query(value = "SELECT * from t_word w where DATE(w.updated_on)<= (SELECT DATE_SUB(CURRENT_DATE,INTERVAL :daysBack day)) ", nativeQuery = true)
+	//@Query(value = "SELECT * from t_word w where DATE(w.updated_on)<= (SELECT DATE_SUB(CURRENT_DATE,INTERVAL :daysBack day)) ", nativeQuery = true)
+	@Query(value = "SELECT id, unique_name, word, type, details, created_on, updated_on, last_read from t_word w where DATE(w.updated_on)<= (SELECT DATE_SUB(CURRENT_DATE,INTERVAL :daysBack day)) ", nativeQuery = true)
 	List<Word> findPagedData(Pageable pageable, @Param("daysBack") int daysBack);
 
 //	List<Word> findPagedData(Pageable pageable);
