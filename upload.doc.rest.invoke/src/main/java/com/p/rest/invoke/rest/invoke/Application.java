@@ -127,7 +127,7 @@ public class Application {
 	}
 
 	private void callForPan(String urltoinvoke) {
-//		String url = "https://kraivl.indiabulls.com/App/kra/paninfo";
+
 //		System.out.println("\n=====================================");
 		System.out.println("Current date : " + new Date());
 		// String
