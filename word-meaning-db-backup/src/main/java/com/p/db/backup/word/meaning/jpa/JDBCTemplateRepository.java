@@ -85,7 +85,7 @@ public class JDBCTemplateRepository {
 
 	public boolean checkUniqueNameExists(String uniqueName, int id) {
 
-		String sql = "SELECT COUNT(*) FROM T_WORD WHERE UPPER(UNIQUE_NAME) = ? and ID=?";
+		String sql = "SELECT COUNT(*) FROM t_word WHERE UPPER(UNIQUE_NAME) = ? and ID=?";
 		boolean result = false;
 		int count = jdbcTemplate.queryForObject(sql, new Object[] { uniqueName.toUpperCase(), id }, Integer.class);
 		if (count > 0) {
@@ -96,7 +96,7 @@ public class JDBCTemplateRepository {
 
 	public int getIdForUniqueName(String uniqueName, int id) {
 
-		String sql = "SELECT ID FROM T_WORD WHERE UPPER(UNIQUE_NAME) = ?";
+		String sql = "SELECT ID FROM t_word WHERE UPPER(UNIQUE_NAME) = ?";
 		// boolean result = false;
 		int idFromDB = jdbcTemplate.queryForObject(sql, new Object[] { uniqueName.toUpperCase() }, Integer.class);
 //		if (idFromDB > 0) {
